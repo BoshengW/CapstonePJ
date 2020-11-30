@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { 
+   font-family: Arial;
+   padding: 2px;
+   background: #e6e0e0;
+}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.spacer {
+    flex: 1 1 auto;
+ }
+.gap {
+    margin-right: 10px;
+ }
+
+ .center {
+   margin-top:20px;
+   margin: auto; 
+   width: 50%;
+   /* border: 5px solid #FFFF00; */
+   padding: 5px;
+ }

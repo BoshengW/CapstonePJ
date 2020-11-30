@@ -1,0 +1,44 @@
+<app-top-bar></app-top-bar>
+
+<div fxLayoutAlign="center" style="margin-top: 30px;">
+    <mat-card fxFlex="60">
+        <mat-toolbar color="primary">
+            Register
+        </mat-toolbar>
+        <form #registerForm="ngForm" fxLayoutAlign="stretch" fxLayout="column" (ngSubmit)="onSubmit(registerForm)">
+            {{ registerForm.value | json }}
+            <mat-form-field>
+              <input matInput class="form-control" name="username" type="text" placeholder="Username" required ngModel>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput class="form-control" name="email" type="email" placeholder="Email Address" required ngModel>
+            </mat-form-field>
+          
+            <mat-form-field>
+                <input matInput class="form-control" name="password" type="password" placeholder="Password" required ngModel>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Choose a date</mat-label>
+                <input matInput class="form-control" name="birth" [matDatepicker]="picker" required ngModel>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <small style="color: crimson;" *ngIf="!registerFlag && clickFlag">
+                *Register Declined: Username might conflict or Input Format not allowed!
+            </small>
+            <br>
+
+            <div fxLayoutAlign="stretch center" fxLayout="column">
+                <button class="sign-button" mat-raised-button color="accent" type="submit">Log In</button>
+            </div> 
+          
+        </form>
+        <br>
+        <div fxLayoutAlign="center">
+            <button class="sign-button" mat-raised-button color="accent" type="submit" routerLink="/login">Cancel</button>
+        </div>
+    </mat-card>
+</div>

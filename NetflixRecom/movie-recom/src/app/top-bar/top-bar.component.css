@@ -1,0 +1,14 @@
+.spacer {
+    flex: 1 1 auto;
+ }
+ .gap {
+    margin-right: 10px;
+ }
+
+ .center {
+   margin-top:20px;
+   margin: auto; 
+   width: 50%;
+   /* border: 5px solid #FFFF00; */
+   padding: 5px;
+ }

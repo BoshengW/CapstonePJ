@@ -1,0 +1,38 @@
+<app-top-bar></app-top-bar>
+
+<div fxLayoutAlign="center" style="margin-top: 50px;">
+
+    <mat-card fxFlex="30">
+        <mat-toolbar color="primary">
+            Log In Page
+        </mat-toolbar>
+        <!-- <form #userLogin="ngForm" fxLayoutAlign="stretch" fxLayout="column" (ngSubmit)="login(userLogin)"> -->
+        <form #userLogin="ngForm" fxLayoutAlign="stretch" fxLayout="column">
+ 
+            <mat-form-field class="form-group">
+                <input matInput type="text" class="form-control" name="username" placeholder="Username" [(ngModel)]="username">
+            </mat-form-field>
+
+            <mat-form-field class="form-group">
+                <input matInput type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password">
+            </mat-form-field>
+
+            <small style="color: crimson;" *ngIf="!loginFlag && userInputFlag">
+                *Invalid Username or Password
+            </small>
+            <br>
+            {{userLogin.value | json}}
+            <div fxLayoutAlign="stretch center" fxLayout="column">
+                <button class="sign-button" mat-raised-button color="accent" type="submit" (click)="login(userLogin)">Log In</button>
+            </div>
+
+        </form>
+        <br>
+        <div fxLayoutAlign="center">
+            <button class="sign-button" mat-raised-button color="accent" type="submit" routerLink="/register">New User</button>
+        </div>
+    </mat-card>
+
+   
+</div>
+

@@ -1,0 +1,45 @@
+<body>
+    <app-top-bar></app-top-bar>
+
+<!-- <div fxLayoutAlign="center center" fxFlexFill> -->
+    <!-- <mat-card fxFlex="50" fxLayout="column">
+        <span>Input four your favorite movies:</span><br>
+        <form #rateList="ngForm" fxLayoutAlign="stretch" fxLayout="column" (ngSubmit)="recommend(rateList)">
+            <mat-form-field class="form-group" appearance="outline" *ngFor="let movie of moviesPoster"> 
+                <mat-label>Rate this movie: {{movie.moviename}}</mat-label>
+                <input matInput type="number" class="form-control" name={{movie.moviename}} required ngModel>
+            </mat-form-field>
+
+            <button mat-raised-button color="accent" type="submit">Find my Favorate</button>
+        </form>
+    
+        <hr>
+        <br>
+        <span>Your Recommendation:</span><br>
+        <h2 *ngFor="let recomMovie of recomMovieList">
+            {{recomMovie.movie}}
+        </h2>
+
+    </mat-card> -->
+    <div class="leftcolumn">
+        <p class="paragraph">
+            <strong>Note: </strong>Greeting, welcome to PandoRec-Movie, RandoRec-movie system aims to provide user a personalized movie-rating&recommend tool. We focusing on recommend every-user
+            best movie they expected. This is your first time loging into PandoRec, for new user, we suggest you to rate some movies to activate your recommendation system. We appreciate your patient.
+            And hope you enjoy your time in PandoRec. Peace and Love.
+        </p>
+    </div>
+    <div class="midcolumn">
+        <div class="card" *ngFor="let movie of moviesPoster">
+            <img src={{movie.link}} alt="no image found">
+            <label style="float: right;">Please Rate This Movie<br><h2 style="float: right;">{{movie.movie}}</h2><br>
+                <star-rating style="float: right;" value="0" totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, movie.movie)"></star-rating>
+            </label><br>
+            
+
+        </div>
+
+    </div>
+    
+<!-- </div> -->
+
+</body>
