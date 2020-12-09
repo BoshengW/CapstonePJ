@@ -10,6 +10,8 @@ from flask import Response
 import movieRecom
 import numpy as np
 
+import util
+
 
 app = Flask(__name__)
 CORS(app)
@@ -90,14 +92,12 @@ def validateUserInfo():
     return resp
 
 def checkNewUserOrNot(user):
-    _user_features = mongo.db.user_features100K.find_one({'userId': user['userId']})
+    _user_features = mongo.db.users_Top5Sim100K.find_one({'userId': user['userId']})
     if not _user_features:
         #this is new user since there is no user-feature matrix
         return True
     else:
         return False
-
-
 
 
 
@@ -112,6 +112,7 @@ def getMovieList():
     for _movieId in random_movieId_list:
         _movieInfo = mongo.db.movie_meta100k.find_one({'movieId': _movieId})
         movie_query_list.append(_movieInfo)
+
     print(movie_query_list)
 
 
@@ -136,20 +137,48 @@ def getRecomMovies():
 @app.route("/insertNewUserRating", methods=['POST'])
 def insertNewUserRecomMovies():
 
-    _insertJson = request.get_json()
-    print(_insertJson)
+    # _insertJson = request.get_json()
+    # print(_insertJson)
 
-    return Response(status=203, mimetype="application/json")
+    return Response(status=200, mimetype="application/json")
 
 
 @app.route("/getNewUserRecomMovies", methods=['POST'])
 def getNewUserRecomMovies():
-    pass
+    """
+
+    received new user first rating from "new-user page" from Angular,
+    load high-rating movielist and find most similar movie to these movies as recommendation result
+
+    :return: recommend-movielist
+    """
+    _newUser_rating_json = request.get_json()
+
+    _newUser_rating_dict = _newUser_rating_json['movieRating']
+    print(_newUser_rating_dict)
+
+    _newUser_favoriteMovie_list = util.findUserFavoriteMovies(_newUser_rating_dict)
+
+
+    recommend_movieIdlist = []
+    for _movieId in _newUser_favoriteMovie_list:
+        _movieInfo = mongo.db.movie_Top5Sim100K.find_one({"movieId": int(_movieId)})
+        recommend_movieIdlist = recommend_movieIdlist + _movieInfo['movies_cossim']
+
+    recommend_movieInfolist = []
+    for _recom_movieId in recommend_movieIdlist:
+        _movieInfo = mongo.db.movie_meta100k.find_one({"movieId": _recom_movieId})
+        recommend_movieInfolist.append(_movieInfo)
+
+    print(recommend_movieIdlist)
+
+    return dumps(recommend_movieInfolist)
+
 
 if __name__ == "__main__":
-    SVD_users_matrix=np.memmap('D:/CapstonePJ/NetflixRecom/recom-restapi/configuration/SVD_user_matrix.dat',
+    SVD_users_matrix = np.memmap('D:/CapstonePJ/NetflixRecom/recom-restapi/configuration/SVD_user_matrix.dat',
                                         dtype="float32", mode="r", shape=(943, 100))
 
-    SVD_movies_matrix=np.memmap('D:/CapstonePJ/NetflixRecom/recom-restapi/configuration/SVD_movie_matrix.dat',
+    SVD_movies_matrix = np.memmap('D:/CapstonePJ/NetflixRecom/recom-restapi/configuration/SVD_movie_matrix.dat',
                                         dtype="float32", mode="r", shape=(100, 1682))
     app.run(debug=True)
