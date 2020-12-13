@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatDatepickerModule, MatNativeDateModule} from '@angular/material';
 import { RatingModule } from 'ng-starrating';
+import { NewuserPageComponent } from './newuser-page/newuser-page.component';
 
 
 
@@ -30,7 +31,8 @@ import { RatingModule } from 'ng-starrating';
     HomePageComponent,
     LoginComponent,
     RegisterComponent,
-    RecomResultComponent
+    RecomResultComponent,
+    NewuserPageComponent
   ],
   imports: [
     BrowserModule,

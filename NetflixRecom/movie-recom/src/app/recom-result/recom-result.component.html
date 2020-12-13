@@ -1,1 +1,2 @@
-<p>{{ message }}</p>
+<p *ngFor="let movie of recom_movielist">{{movie | json}}</p>
+<button type="submit" (click)="submit()">click</button>

@@ -15,36 +15,41 @@ export class HomePageComponent implements OnInit {
 
   movies: any = []
   userRatingList: Movie[] = []
-  recomMovieList: any = []
-  moviesPoster: any = []
+  recomMovieListbyMovieSim: any = []
+  recomMovieListbyUserSim: any = []
   
+  currentUser = {};
 
 
   constructor(private httpClient: HttpClient, private _data: DataService, private router: Router) { }
 
   ngOnInit() {
-    // this is the initialization part
-    // this._data.getMoiveList().subscribe(
-    //   data => { this.movies=data;
-    //     console.log(this.movies);
-    // })
 
-    this._data.getMovieListAndPoster().subscribe( data=> {
-      this.moviesPoster = data;
-      console.log(this.moviesPoster);
-    })
+    this.currentUser = this._data.getUserLogin();
 
-  }
+    if(this.currentUser["newUserFlag"]) {
 
-  recommend(rateList: NgForm) {
-    this.loadEachMovieRate(rateList.form);
-    this._data.getRecomMovies(this.userRatingList).subscribe(data=> {
-      this.recomMovieList = data;
-      console.log(this.recomMovieList); // need to use console.log to wait for subscribe finish loading data
-    });
+      // if user is new user
+      this.recomMovieListbyMovieSim = this._data.recomMovieObject["MovieSim"];
+      this.recomMovieListbyUserSim = this._data.recomMovieObject["UserSim"];
+      console.log(this.recomMovieListbyMovieSim);
 
+    } else {
 
-    // this.router.navigate(['recomsys']);
+      // // user is old user
+      // console.log("this is old user");
+      // this._data.getOldUserRecomMovieList(this.currentUser).subscribe( data=> {
+      //   // this.recomMovieListbyUserSim = data;
+      //   this._data.setRecomMovieObject(data);
+      this.recomMovieListbyMovieSim = this._data.recomMovieObject["MovieSim"];
+      this.recomMovieListbyUserSim = this._data.recomMovieObject["UserSim"];
+      console.log("Inside Old USer ");
+      console.log(this.recomMovieListbyMovieSim);
+      //   console.log(this._data.recomMovieObject);}, 
+      //   err=>console.log("Failed to get Recommend for this old user"));
+      
+    }
+
   }
 
   loadEachMovieRate(group: FormGroup) {

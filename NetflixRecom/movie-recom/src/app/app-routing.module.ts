@@ -5,6 +5,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { RegisterComponent } from './register/register.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { RecomResultComponent } from './recom-result/recom-result.component';
+import { NewuserPageComponent } from './newuser-page/newuser-page.component';
 
 
 const routes: Routes = [
@@ -12,7 +13,8 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'home', component: HomePageComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'recomsys', component: RecomResultComponent}
+  {path: 'recomsys', component: RecomResultComponent},
+  {path: 'newuser', component: NewuserPageComponent}
 ];
 
 @NgModule({

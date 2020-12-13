@@ -15,11 +15,11 @@ export class LoginvalidService {
 
   }
 
-  getloginInfo(user: User): Observable<LogIn>{
+  getloginInfo(user: User): Observable<any>{
 
     console.log(user.username);
     // params: url; json body; httpOptions
-    const _url = 'http://localhost:5000/loginInfo';
+    const _url = 'http://192.168.99.100:5001/loginInfo';
     // return this.httpClient.post<User>(_url, JSON.stringify(userBody));
     return this.httpClient.post<any>(_url, user)
   } 

@@ -1,0 +1,31 @@
+<body>
+    <app-top-bar></app-top-bar>
+
+    <div class="leftcolumn">
+        <p class="paragraph">
+            <strong>Note: </strong>Greeting, welcome to PandoRec-Movie, RandoRec-movie system aims to provide user a personalized movie-rating&recommend tool. We focusing on recommend every-user
+            best movie they expected. This is your first time loging into PandoRec, for new user, we suggest you to rate some movies to activate your recommendation system. We appreciate your patient.
+            And hope you enjoy your time in PandoRec. Peace and Love.
+        </p>
+    </div>
+    <div class="midcolumn outline">
+        <div>
+            <h2>Cold Start Activation Question for New User {{currentUser | json}}</h2>
+        </div>
+        <div class="card" *ngFor="let movie of movies_chooseFromServer">
+            <img src={{movie.poster_link}} alt="no image found">
+            <label style="float: right;">Please Rate This Movie:<br><p style="float: right;"><b>{{movie.title}}</b></p><br>
+                <star-rating style="float: right;" value="0" totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, movie.title, movie.movieId)"></star-rating>
+            </label><br>
+        </div>
+        <br>
+
+        <div fxLayoutAlign="center">
+            <button class="sign-button" mat-raised-button color="accent" type="submit" (click)="submitRate()">Submit Rating</button>
+        </div>
+
+        <br>
+    </div>
+    
+
+</body>

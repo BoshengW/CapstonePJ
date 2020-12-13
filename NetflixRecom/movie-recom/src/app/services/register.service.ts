@@ -11,7 +11,7 @@ export class RegisterService {
   constructor(private httpClient: HttpClient) { }
 
   submitUserForm(newUser: User) {
-    const _url = "http://localhost:5000/register";
+    const _url = "http://192.168.99.100:5001/register";
     console.log(newUser);
 
     return this.httpClient.post(_url, newUser, {observe: 'response' as 'response'});
