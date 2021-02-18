@@ -1,0 +1,53 @@
+<!-- <div class="card"> -->
+<div>
+    <img src={{data.poster_link}} alt="no image found">
+    <div class="movie-info">
+        <span>
+            <span class='p1'><b>Title</b></span>:
+            <span class='p1'>{{data.title}}</span>
+        </span>
+        <br>
+        <span>
+            <span class='p1'><b>Release</b></span>:
+            <span class='p1'>{{data.release_year}}</span>
+        </span>
+        <br>
+
+        <span>
+            <span class='p1'><b>Genres</b></span>:
+            <span class='p1'>{{data.genres}}</span>
+        </span>
+        <br>
+        <br>
+
+        <span>
+            <span class='p1'><b>AvgRate</b></span>:
+            <span class='p1'>{{data.AvgRate}} rate in {{data.RateCount}} people</span>
+        </span>
+        <br>
+        <star-rating style="float: left;" value={{data.AvgRate}} totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="true"></star-rating>
+        <br>
+        <br>
+
+        <span>
+            <span class='p1'><b>Predict Recommend Rate</b></span>:
+        </span>
+        <br>
+        <star-rating style="float: left;" value={{data.PredRate}} totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="true"></star-rating>
+        <br>
+        <br>
+
+        <span>
+            <span class='p1'><b>Predict Recommend Rate</b></span>:
+        </span>
+        <br>
+        <star-rating style="float: left;" value="0" totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, data.title)"></star-rating>
+
+
+
+
+
+
+
+    </div>
+</div>

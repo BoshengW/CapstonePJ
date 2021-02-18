@@ -7,14 +7,21 @@
 
     <div>
         <div class="container">
-            <h2>Guess You Like       <mat-icon aria-label="Sign" class="gap">favorite</mat-icon></h2>
+            <mat-toolbar color = "primary">
+                <h2>Guess You Like       <mat-icon aria-label="Sign" class="gap">favorite</mat-icon></h2>
+                <span class="example-spacer"></span>
+                <button mat-icon-button class="example-icon" type="submit" (click)="refreshMovieSimMovieList()">
+                    <mat-icon>autorenew</mat-icon>
+                </button>
+            </mat-toolbar>
             <hr>
-            <div class="card" *ngFor="let movie of recomMovieListbyMovieSim">
+            <div class="card" *ngFor="let movie of recomMovieListbyMovieSim" (click)="openMovieDialog(movie)">
                 <img src={{movie.poster_link}} alt="no image found">
                 <div class="movie-info">
                     <h4 class="movie_title">{{movie.title}}</h4>
                     <br>
-                    <star-rating style="float: left;" value="0" totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, movie.title)"></star-rating>
+                    <span class="p2">System Recommend Rate</span>
+                    <star-rating style="float: left;" value={{movie.PredRate}} totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="true"></star-rating>
                 </div>
             </div>
         </div>
@@ -24,17 +31,27 @@
     <br>
 
     <div class="container">
-        <h2>Other Similar User Like     <mat-icon aria-label="Sign" class="gap">face</mat-icon></h2>
+        <mat-toolbar color = "primary">
+            <h2>Other Similar User Like     <mat-icon aria-label="Sign" class="gap">face</mat-icon></h2>
+            <span class="example-spacer"></span>
+            <button mat-icon-button class="example-icon" type="submit" (click)="refreshUserSimMovieList()">
+                <mat-icon>autorenew</mat-icon>
+            </button>
+            
+        </mat-toolbar>
         <hr>
-        <div class="card" *ngFor="let movie of recomMovieListbyUserSim">
+        <div class="card" *ngFor="let movie of recomMovieListbyUserSim" (click)="openMovieDialog(movie)">
             <img src={{movie.poster_link}} alt="no image found">
             <div class="movie-info">
                 <h4 class="movie_title">{{movie.title}}</h4>
                 <br>
-                <star-rating style="float: left;" value="0" totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, movie.title)"></star-rating>
+                <span class="p2">System Recommend Rate</span>
+                <!-- <star-rating style="float: left;" value={{movie.AvgRate}} totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="false" (rate)="onRate($event, movie.title)"></star-rating> -->
+                <star-rating style="float: left;" value={{movie.PredRate}} totalstars="5" checkedcolor="red" uncheckedcolor="grey" size="24px" readonly="true"></star-rating>
             </div>
         </div>
     </div>
+
     
     
 

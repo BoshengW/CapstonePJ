@@ -18,6 +18,10 @@ export class DataService {
   recomMovieObject = {};
   finishFlag = false;
 
+  
+
+  server_url = "http://127.0.0.1:5000/";
+
   constructor(private _http: HttpClient) {
 
   }
@@ -35,28 +39,29 @@ export class DataService {
 
 
   getOldUserRecomMovieList(userLoginInfo: any): Observable<any>{
-    const _url = "http://192.168.99.100:5001/getOldUserRecomMovieList";
+    const _url = this.server_url + "getOldUserRecomMovieList";
     return this._http.post<any>(_url, userLoginInfo);
   }
 
-
+  ////////////////Pending function //////////////////////
+  /// this is pending service function
   newUserRatingQuestion() {
-    const _url = "http://192.168.99.100:5001/getMovieList";
+    const _url = this.server_url + "getMovieList";
     return this._http.get<any>(_url);
   }
 
   sendNewUserRatingList(userInfoAndMovieRating: any) {
-    const _url = "http://192.168.99.100:5001/insertNewUserRating";
+    const _url = this.server_url + "insertNewUserRating";
     let finishFlag = false;
     // wait for server load these rating data into MongoDB
     this._http.post(_url, userInfoAndMovieRating, {observe: 'response' as 'response'})
         .subscribe(
           response => {
+            
             // check if all rating successfully insert into MongoDB
             this.getNewUserRecomMovieList(response.status, userInfoAndMovieRating);
             console.log("send new user rating to server");
             
-        
     });
 
   }
@@ -64,7 +69,8 @@ export class DataService {
   getNewUserRecomMovieList(response_status: number, userInfoAndMovieRating: any) {
     
     if(response_status==200) {
-      const _url = "http://192.168.99.100:5001/getNewUserRecomMovies";
+
+      const _url = this.server_url + "getNewUserRecomMovies";
       // if insert successfully then use user-info to get Recom-MovieList from server 
       console.log("inside recommend part");
       console.log(userInfoAndMovieRating);

@@ -6,6 +6,19 @@ import { Router } from '@angular/router';
 import { Movie } from '../model/movie';
 import { StarRatingComponent } from 'ng-starrating';
 
+import {FormControl} from '@angular/forms';
+import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import { MatDialog } from '@angular/material';
+import { DialogMovieComponent } from '../dialog-movie/dialog-movie.component';
+
+
+/////////
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {ElementRef, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 @Component({
   selector: 'app-newuser-page',
   templateUrl: './newuser-page.component.html',
@@ -15,19 +28,30 @@ export class NewuserPageComponent implements OnInit {
 
   newUser_rating_dict = {};
   // userRatingList: Movie[] = [];
-  movies_chooseFromServer: any = [];
+  popularMovieDict: any;
+  selectMovieList: any={};
+  generalMovieList: any = [];
+  genreslist: any = [];
+
+  // autocomplete chip
+  visible = true;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  genreCtrl = new FormControl();
+  filteredGenres: Observable<string[]>;
+  genres_selected: string[] = [];
+
+  @ViewChild('fruitInput', { static: true }) fruitInput: ElementRef;
+  ///
 
   // load user info from login page
   currentUser = {};
 
-  constructor(private httpClient: HttpClient, private _data: DataService, private router: Router) { }
+  constructor(private httpClient: HttpClient, private _data: DataService, private router: Router,public dialog: MatDialog) { }
 
   ngOnInit() {
 
-    this._data.newUserRatingQuestion().subscribe( data=> {
-      this.movies_chooseFromServer = data;
-      console.log(this.movies_chooseFromServer);
-    });
 
     this.currentUser = this._data.getUserLogin();
 
@@ -36,9 +60,80 @@ export class NewuserPageComponent implements OnInit {
       this.router.navigate(['login']);
     }
 
+    this._data.newUserRatingQuestion().subscribe( data=> {
+      this.popularMovieDict = data;
+      this.generalMovieList = this.popularMovieDict['Comedy']
+      this.genreslist = this.popularMovieDict['GenresList']
+      delete this.popularMovieDict.GenresList;
+
+    });
+
+    this.filteredGenres = this.genreCtrl.valueChanges.pipe(
+      startWith(null),
+      map((genre: string | null) => genre ? this._filter(genre) : this.genreslist.slice()));
 
   }
 
+  /// chip operation 
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our genre
+    if ((value || '').trim()) {
+      this.genres_selected.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.genreCtrl.setValue(null);
+  }
+
+  remove(genre: string): void {
+    const index = this.genres_selected.indexOf(genre);
+
+    if (index >= 0) {
+      this.genres_selected.splice(index, 1);
+    }
+    console.log(this.genres_selected);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.genres_selected.push(event.option.viewValue);
+    this.fruitInput.nativeElement.value = '';
+    this.genreCtrl.setValue(null);
+    console.log(this.genres_selected);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.genreslist.filter(genre => genre.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  ///
+
+  showUserFavrite() {
+
+    // update select Movielist based on user option
+    for(var _selectGenre of this.genres_selected) {
+      this.selectMovieList[_selectGenre] = this.popularMovieDict[_selectGenre];
+    }
+
+    console.log(this.selectMovieList);
+  }
+
+  openMovieDialog(movie) {
+    this.dialog.open(DialogMovieComponent, {
+      width: '600px',
+      height: '350px',
+      data: movie
+    });
+
+  }
 
   onRate($event:{oldValue:number, newValue:number, starRating:StarRatingComponent}, moviename: string, movieId: number) {
     
@@ -48,7 +143,7 @@ export class NewuserPageComponent implements OnInit {
   }
 
   submitRate() {
-    let _length = this.movies_chooseFromServer.length;
+    let _length = this.popularMovieDict.length;
     // console.log(_length);
     console.log(this.newUser_rating_dict)
 

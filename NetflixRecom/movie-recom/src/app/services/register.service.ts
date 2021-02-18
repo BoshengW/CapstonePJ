@@ -8,10 +8,12 @@ import { User } from '../model/user';
 })
 export class RegisterService {
 
+  server_url = "http://127.0.0.1:5000/";
+
   constructor(private httpClient: HttpClient) { }
 
   submitUserForm(newUser: User) {
-    const _url = "http://192.168.99.100:5001/register";
+    const _url = this.server_url + "register";
     console.log(newUser);
 
     return this.httpClient.post(_url, newUser, {observe: 'response' as 'response'});

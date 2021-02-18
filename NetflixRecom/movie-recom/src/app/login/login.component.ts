@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
               //delay waiting for response
               setTimeout(() => {
                 this.router.navigate(['home']);
-              },3000);
+              },6000);
 
             }
 

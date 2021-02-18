@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule , MatButtonModule , MatIconModule} from "@angular/material";
+import { MatToolbarModule , MatButtonModule , MatIconModule, MatDialogModule} from "@angular/material";
 import { MatFormFieldModule, MatInputModule} from "@angular/material";
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginComponent } from './login/login.component';
@@ -21,6 +21,9 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatDatepickerModule, MatNativeDateModule} from '@angular/material';
 import { RatingModule } from 'ng-starrating';
 import { NewuserPageComponent } from './newuser-page/newuser-page.component';
+import { DialogMovieComponent } from './dialog-movie/dialog-movie.component';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatAutocompleteModule} from '@angular/material';
 
 
 
@@ -32,8 +35,10 @@ import { NewuserPageComponent } from './newuser-page/newuser-page.component';
     LoginComponent,
     RegisterComponent,
     RecomResultComponent,
-    NewuserPageComponent
+    NewuserPageComponent,
+    DialogMovieComponent
   ],
+  entryComponents: [DialogMovieComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -50,8 +55,11 @@ import { NewuserPageComponent } from './newuser-page/newuser-page.component';
     MatDatepickerModule,
     MatNativeDateModule,
     HttpClientModule,
-    RatingModule
-
+    RatingModule,
+    MatDialogModule,
+    MatChipsModule,
+    MatAutocompleteModule
+    
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]

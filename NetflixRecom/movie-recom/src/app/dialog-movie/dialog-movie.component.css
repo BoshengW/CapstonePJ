@@ -1,9 +1,7 @@
-
 img {
-    max-width: 40%;
-    max-height: 40%;
+    max-width: 60%;
+    max-height: 60%;
 }
-
 
 .card {
     background-color: rgb(255, 255, 255);
@@ -12,19 +10,18 @@ img {
     width: 20%;
     float: left;
     margin-right: 20px;
-
 }  
+
 .movie_title {
     float: left;
-    width: 150px;
+    width: 300px;
     
 }
+
 .movie-info {
-    padding:5px;
-    margin-top:10px;
-    /* margin-right: 10px; */
-    height: 180px;
-    width: 150px;
+    
+    height: 300px;
+    width: 340px;
     float: right;
     
 }
@@ -47,3 +44,6 @@ img {
     flex: 1 1 auto;
   }
 
+.p1 {
+    font-size:0.875em;
+}

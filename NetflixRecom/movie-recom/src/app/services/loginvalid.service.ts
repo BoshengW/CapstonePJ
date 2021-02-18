@@ -11,6 +11,9 @@ import { UrlSerializer } from '@angular/router';
 })
 export class LoginvalidService {
 
+
+  server_url = "http://127.0.0.1:5000/";
+
   constructor(private httpClient: HttpClient) { 
 
   }
@@ -19,7 +22,7 @@ export class LoginvalidService {
 
     console.log(user.username);
     // params: url; json body; httpOptions
-    const _url = 'http://192.168.99.100:5001/loginInfo';
+    const _url = this.server_url + 'loginInfo';
     // return this.httpClient.post<User>(_url, JSON.stringify(userBody));
     return this.httpClient.post<any>(_url, user)
   } 

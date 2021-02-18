@@ -5,6 +5,10 @@ import { NgForm, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Movie } from '../model/movie';
 import { StarRatingComponent } from 'ng-starrating';
+import _ from "loadsh";
+import { MatDialog } from '@angular/material';
+import { DialogMovieComponent } from '../dialog-movie/dialog-movie.component';
+
 
 @Component({
   selector: 'app-home-page',
@@ -17,11 +21,12 @@ export class HomePageComponent implements OnInit {
   userRatingList: Movie[] = []
   recomMovieListbyMovieSim: any = []
   recomMovieListbyUserSim: any = []
+
   
   currentUser = {};
 
 
-  constructor(private httpClient: HttpClient, private _data: DataService, private router: Router) { }
+  constructor(private httpClient: HttpClient, private _data: DataService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
 
@@ -36,19 +41,29 @@ export class HomePageComponent implements OnInit {
 
     } else {
 
-      // // user is old user
-      // console.log("this is old user");
-      // this._data.getOldUserRecomMovieList(this.currentUser).subscribe( data=> {
-      //   // this.recomMovieListbyUserSim = data;
-      //   this._data.setRecomMovieObject(data);
-      this.recomMovieListbyMovieSim = this._data.recomMovieObject["MovieSim"];
-      this.recomMovieListbyUserSim = this._data.recomMovieObject["UserSim"];
+      // if user is old user
+      this.recomMovieListbyMovieSim = _.sampleSize(this._data.recomMovieObject["MovieSim"], 10);
+      this.recomMovieListbyUserSim = _.sampleSize(this._data.recomMovieObject["UserSim"], 10);
       console.log("Inside Old USer ");
       console.log(this.recomMovieListbyMovieSim);
-      //   console.log(this._data.recomMovieObject);}, 
-      //   err=>console.log("Failed to get Recommend for this old user"));
+ 
       
     }
+
+    if(Object.keys(this.currentUser).length==0) {
+      // need to modify with Oanth in future
+      this.router.navigate(['login']);
+    }
+
+
+  }
+
+  openMovieDialog(movie) {
+    this.dialog.open(DialogMovieComponent, {
+      width: '600px',
+      height: '350px',
+      data: movie
+    });
 
   }
 
@@ -62,6 +77,16 @@ export class HomePageComponent implements OnInit {
     })
 
   }
+
+  refreshMovieSimMovieList() {
+    this.recomMovieListbyMovieSim = _.sampleSize(this._data.recomMovieObject["MovieSim"], 10);
+  }
+
+
+  refreshUserSimMovieList() {
+    this.recomMovieListbyUserSim = _.sampleSize(this._data.recomMovieObject["UserSim"], 10);
+  }
+
   onRate($event:{oldValue:number, newValue:number, starRating:StarRatingComponent}, moviename: string) {
     alert(`Old Value:${$event.oldValue}, 
       New Value: ${$event.newValue}, 
@@ -69,6 +94,5 @@ export class HomePageComponent implements OnInit {
       Unchecked Color: ${$event.starRating.uncheckedcolor}
       name: ${moviename}`);
   }
-
 
 }
