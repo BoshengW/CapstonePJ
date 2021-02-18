@@ -17,18 +17,50 @@ def findUserFavoriteMovies(rating_dict, ):
             user_FavoriteMovieList.append(_key)
 
     if not user_FavoriteMovieList:
-        user_FavoriteMovieList = getPopularMovieList();
+        user_FavoriteMovieList = getMostPopularMovieList()
 
 
 
     return user_FavoriteMovieList
 
 
-def getPopularMovieList():
+def getMostPopularMovieList(MovieMetaDB, Top10MovieEachGenresDB, MovieRateCount, MovieAvgRate):
     """
-    return top10 most popular movies currently
+    return top10 most popular movies in each genres
     :return: movieId list
     """
-    popular_list = random.sample(range(1,1682), 10)
+    genres_list = ['(no genres listed)', 'Action', 'Adventure', 'Animation', 'Children',
+       'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'Film-Noir',
+       'Horror', 'IMAX', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
+       'War', 'Western']
 
-    return popular_list
+    dict_movie_eachGenres = {}
+
+    for _genre in genres_list:
+        _top10_movieList = Top10MovieEachGenresDB.find_one({'genre': _genre})['Top10Movie']
+        _moiveInfolist = []
+
+        for _movieId in _top10_movieList:
+            _movieInfo = MovieMetaDB.find_one({'movieId': _movieId})
+            ## remove Object ID which is no-serializable
+            del _movieInfo['_id']
+            _movieInfo['AvgRate'] = MovieAvgRate.find_one({'movieId': _movieId})['avg_rate']
+            _movieInfo['RateCount'] = MovieRateCount.find_one({'movieId': _movieId})['count']
+            _moiveInfolist.append(_movieInfo)
+        dict_movie_eachGenres[_genre] = _moiveInfolist
+
+    dict_movie_eachGenres['GenresList'] = genres_list
+
+
+    return dict_movie_eachGenres
+
+
+def getCurrentPopularMovieList(MovieMetaDB, MovieRateCount, MovieAvgRate):
+    """
+    return top10 most popular movies in CurrentMovieCount MongoDB
+    :return:
+    """
+
+    return
+
+
