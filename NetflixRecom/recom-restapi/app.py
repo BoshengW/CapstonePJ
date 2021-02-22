@@ -36,6 +36,9 @@ global MovieSimOffline
 global MovieAvgRate
 global MovieRateCount
 global Top10MovieEachGenres
+global MovieRatedMeta
+global RecomResult_MovieSim
+global RecomResult_UserSim
 
 global UserIDMapping
 global MovieIDMapping
@@ -140,48 +143,16 @@ def getOldUserRecomMovieLists():
         userId_inner = UserIDMapping[str(userId)]
         recomMovieList = {}
 
-        ## recom movie based on similar user preference
-        recomMovieIdListbyUserSim = []
-        _similarUserId = UserSimOffline.find_one({"userId": userId})
 
-        for _userId in _similarUserId["sim_user"]:
-            _movieIdList = UserLikeTop10.find_one({"userId": _userId})
-            recomMovieIdListbyUserSim = recomMovieIdListbyUserSim + _movieIdList["like_top10"]
-
-        for _movieId in recomMovieIdListbyUserSim[:10]:
-            _movieInfoRecom = MovieMeta.find_one({"movieId": _movieId})
-            _movieInfoRecom["AvgRate"] = MovieAvgRate.find_one({"movieId": _movieId})['avg_rate']
-            _movieInfoRecom["RateCount"] = MovieRateCount.find_one({"movieId": _movieId})['count']
-
-            ## Predict rating value
-            _movieId_inner = MovieIDMapping[str(_movieId)]
-            _movieInfoRecom['PredRate'] = round(
-                float(NeuralCF.predict([pd.Series([userId_inner]), pd.Series([_movieId_inner])])[0][0]), 2
-            )
+        ## read offline recom prediction by Usersim
+        recomMovieIdListbyUserSim = RecomResult_UserSim.find_one({"userId": userId})["recom_movies"]
+        recomMovieListbyUserSim = MovieRatedMeta.find({"movieId": {"$in": recomMovieIdListbyUserSim}})
 
 
-            recomMovieListbyUserSim.append(_movieInfoRecom)
+        ## read offline recom prediction by Moviesim
+        recomMovieIdListbyMovieSim = RecomResult_MovieSim.find_one({"userId": userId})["recom_movies"]
+        recomMovieListbyMovieSim = MovieRatedMeta.find({"movieId": {"$in": recomMovieIdListbyMovieSim}})
 
-        ## recom movie based on similar movie preference
-        recomMovieIdListbyMovieSim = []
-        _userMoviePreference = UserLikeTop10.find_one({"userId": userId})
-
-        for _movieInfo in _userMoviePreference["like_top10"]:
-            _movieIdList = MovieSimOffline.find_one({"movieId": _movieInfo})
-            recomMovieIdListbyMovieSim = recomMovieIdListbyMovieSim + _movieIdList["sim_movie"]
-
-        for _movieId in recomMovieIdListbyMovieSim[:10]:
-            _movieInfoRecom = MovieMeta.find_one({"movieId": _movieId})
-            _movieInfoRecom["AvgRate"] = MovieAvgRate.find_one({"movieId": _movieId})['avg_rate']
-            _movieInfoRecom["RateCount"] = MovieRateCount.find_one({"movieId": _movieId})['count']
-
-            ## Predict rating value
-            _movieId_inner = MovieIDMapping[str(_movieId)]
-            _movieInfoRecom['PredRate'] = round(
-                float(NeuralCF.predict([pd.Series([userId_inner]), pd.Series([_movieId_inner])])[0][0]), 2
-            )
-
-            recomMovieListbyMovieSim.append(_movieInfoRecom)
         print("Old User Rec Success")
     except:
         print("Old user recommend system failed, send most popular movielist")
@@ -205,7 +176,6 @@ def getOldUserRecomMovieLists():
     finally:
         recomMovieList["UserSim"] = recomMovieListbyUserSim
         recomMovieList["MovieSim"] = recomMovieListbyMovieSim
-        print(recomMovieList)
 
 
         return dumps(recomMovieList)
@@ -232,11 +202,14 @@ if __name__ == "__main__":
 
     userLogin = mongo.db.UserInfo
     MovieMeta = mongo.db.MovieMeta
+    MovieRatedMeta = mongo.db.MovieAnalysis
     UserSimOffline = mongo.db.UserSimOffline
     UserLikeTop10 = mongo.db.UserLikeTop10
     MovieSimOffline = mongo.db.MovieSimOffline
     MovieAvgRate = mongo.db.MovieAvgRate
     MovieRateCount = mongo.db.MovieRateCnt
     Top10MovieEachGenres = mongo.db.Top10MovieEachGenres
+    RecomResult_MovieSim = mongo.db.SimMovieRecomOffline
+    RecomResult_UserSim = mongo.db.SimUserRecomOffline
 
     app.run(debug=True)
