@@ -1,6 +1,6 @@
 Flask==1.0.2
 pymongo[srv]
-numpy==1.19.4
+numpy==1.22.0
 faiss==1.5.3
 flask_cors==3.0.9
 Flask-PyMongo==2.3.0
